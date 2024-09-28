@@ -1,9 +1,13 @@
 
 const CopyPlugin = require("copy-webpack-plugin");
 const path = require("path");
+const HtmlPlugin = require("html-webpack-plugin");
+
 module.exports ={
     mode : 'development',
-    entry : './src/test.tsx',
+    entry : {
+        popup: "./src/popup/popup.tsx"
+    },
     module : {
         rules:[
             {
@@ -19,12 +23,17 @@ module.exports ={
                {from: path.resolve("src/manifest.json"),to:path.resolve("dist")},
                 {from: path.resolve("src/assets/icon.png"),to:path.resolve("dist")},
             ]
+        }),
+        new HtmlPlugin({
+            title: "React Chrome Extension",
+            filename: "popup.html",
+            chunks: ["popup"]
         })
     ],
     resolve:{
         extensions:['.tsx','.ts','.js']
     },
     output : {
-        filename:"index.js",
+        filename: "[name].js"
     },
 }
