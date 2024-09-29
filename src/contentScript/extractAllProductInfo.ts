@@ -13,8 +13,8 @@ function extractAllProductInfo(retries = 0) {
         }
 
         // Loop through each product element and extract details
-        productElements.forEach(productElement => {
-            const productInfo = extractProductInfo(productElement);
+        productElements.forEach((productElement,index) => {
+            const productInfo = extractProductInfo(productElement,index);
 
             
             // Push the product info to the allProductInfo array
