@@ -5,7 +5,8 @@
         "target": "es6",
         "moduleResolution": "node",
         "esModuleInterop": true,
-        "types": ["chrome"]
+        "types": ["chrome"],
+        "lib": ["dom", "es2017"] // Add "es2017" here
     },
     "include": ["src/**/*.ts", "src/**/*.tsx", "src/contentScript/contentScript.ts"],
     "exclude": ["node_modules"]

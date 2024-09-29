@@ -1,9 +1,7 @@
 import extractProductInfo from "./extractProductInfo";
 
-function extractAllProductInfo(retries = 0) {
-    return new Promise((resolve) => {
+async function extractAllProductInfo(retries = 0) {
         const productElements = document.querySelectorAll('.product-grid-product');
-        const allProductInfo = [];
         console.log("Length:", productElements.length);
 
         // Check if no products were found or if we should retry
@@ -11,20 +9,19 @@ function extractAllProductInfo(retries = 0) {
             setTimeout(() => {
                 extractAllProductInfo(retries + 1);
             }, 1000);
-            return; // Exit to prevent further execution
+            return; 
         }
 
-        // Loop through each product element and extract details
+        const products={};
         productElements.forEach((productElement) => {
-            const productInfo = extractProductInfo(productElement);
-
-            
-            // Push the product info to the allProductInfo array
-            allProductInfo.push(productInfo);
+            const product = extractProductInfo(productElement as HTMLElement);
+            if (product) {
+                products[product.id] = product;
+            }
         });
 
-        resolve(allProductInfo); // Resolve the Promise with the extracted product info
-    });
+        chrome.storage.local.set({ products });
+
 }
 
 export default extractAllProductInfo;

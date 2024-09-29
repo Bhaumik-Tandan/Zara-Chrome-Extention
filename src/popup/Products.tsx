@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from 'react';
 
+// Define the structure of a Product
+type Product = {
+    name: string;
+    imageUrl: string;
+    price: string;
+};
 
 const Products = () => {
-    const [productsInfo, setProductsInfo] = useState({});
+    const [productsInfo, setProductsInfo] = useState<Record<string, Product>>({}); // productsInfo is a hashmap
 
     useEffect(() => {
         chrome.storage.local.get(['products'], function(result) {
             console.log('Product Information:', result.products);
-            setProductsInfo(result.products|| {});
+            // Since 'products' is a hashmap, we treat it as an object
+            setProductsInfo(result.products || {});
         });
     }, []);
 
-    const products=Object.values(productsInfo);
+    // Convert the hashmap to an array for rendering
+    const products:Product[] = Object.values(productsInfo);
 
     return (
         <div style={styles.container}>
