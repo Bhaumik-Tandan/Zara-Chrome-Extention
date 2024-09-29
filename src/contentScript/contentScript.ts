@@ -1,43 +1,50 @@
-function extractAllProductInfo() {
-    const productElements = document.querySelectorAll('.product-grid-product');
-    const allProductInfo = [];
-    console.log("length",productElements.length);
-    if(productElements.length == 0)
-      return extractAllProductInfo();
+function extractAllProductInfo(retries = 0) {
+    return new Promise((resolve) => {
+        const productElements = document.querySelectorAll('.product-grid-product');
+        const allProductInfo = [];
+        console.log("Length:", productElements.length);
 
-    // Loop through each product element and extract details
-    productElements.forEach(productElement => {
-        const productNameElement = productElement.querySelector('h2');
-        const productPriceElement = productElement.querySelector('.price__amount-wrapper .money-amount__main') ;
-        const productImageElement = productElement.querySelector('.media-image__image');
+        // Check if no products were found
+        if (productElements.length === 0 && retries < 10) { // Set a maximum retry limit
+            setTimeout(() => {
+                resolve(extractAllProductInfo(retries + 1)); // Resolve the Promise with retry
+            }, 1000); // Delay of 100 milliseconds
+            return; // Exit to prevent further execution
+        }
 
-        // Extract the product name
-        const productName = productNameElement.innerText;
+        // Loop through each product element and extract details
+        productElements.forEach(productElement => {
+            const productNameElement = productElement.querySelector('h2');
+            const productPriceElement = productElement.querySelector('.price__amount-wrapper .money-amount__main');
+            const productImageElement = productElement.querySelector('.media-image__image');
 
-        // Extract the product price
-        const productPrice = productPriceElement.textContent;
+            // Extract the product name
+            const productName = productNameElement ? productNameElement.innerText : 'N/A';
 
-        // Extract the product image URL (First image from the carousel)
-        const productImage = (productImageElement as HTMLImageElement)?.src;
+            // Extract the product price
+            const productPrice = productPriceElement ? productPriceElement.textContent : 'N/A';
 
+            // Extract the product image URL (First image from the carousel)
+            const productImage = productImageElement ? productImageElement.src : '';
 
-        // Store the extracted information in an object
-        const productInfo = {
-            name: productName,
-            price: productPrice,
-            imageUrl: productImage
-        };
+            // Store the extracted information in an object
+            const productInfo = {
+                name: productName,
+                price: productPrice,
+                imageUrl: productImage
+            };
 
-        // Push the product info to the allProductInfo array
-        allProductInfo.push(productInfo);
+            // Push the product info to the allProductInfo array
+            allProductInfo.push(productInfo);
+        });
+
+        resolve(allProductInfo); // Resolve the Promise with the extracted product info
     });
-
-    return allProductInfo;
 }
-
 
 window.onload = function() {
-    const productsInfo = extractAllProductInfo();
-    console.log('Extracted Product Information:', productsInfo);
+    extractAllProductInfo().then(productsInfo => {
+        console.log('Extracted Product Information:', productsInfo);
+        chrome.runtime.sendMessage({ type: 'PRODUCT_INFO', productsInfo });
+    });
 }
-
