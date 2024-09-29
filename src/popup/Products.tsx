@@ -1,37 +1,19 @@
 import React, { useEffect, useState } from 'react';
 
-const Test = () => {
+const Products = () => {
     const [productsInfo, setProductsInfo] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     useEffect(() => {
-        const messageListener = (message, sender, sendResponse) => {
-            if (message.type === 'PRODUCT_INFO') {
-                console.log('Received product info:', message.productsInfo);
-                setProductsInfo(message.productsInfo);
-                setLoading(false);
-            } else {
-                setError('Invalid message type received');
-                setLoading(false);
-            }
-        };
-
-        chrome.runtime.onMessage.addListener(messageListener);
-
-        return () => {
-            chrome.runtime.onMessage.removeListener(messageListener);
-        };
+        chrome.storage.local.get(['productsInfo'], function(result) {
+            console.log('Product Information:', result.productsInfo);
+            setProductsInfo(result.productsInfo|| []);
+        });
     }, []);
 
     return (
         <div style={styles.container}>
             <h1 style={styles.header}>Product Information</h1>
-            {loading ? (
-                <p>Loading product information...</p>
-            ) : error ? (
-                <p style={styles.error}>{error}</p>
-            ) : productsInfo.length > 0 ? (
+            {productsInfo.length > 0 ? (
                 <ul style={styles.productList}>
                     {productsInfo.map((product) => (
                         <li key={product.name} style={styles.productItem}>
@@ -102,4 +84,4 @@ const styles = {
     },
 };
 
-export default Test;
+export default Products;

@@ -2,6 +2,7 @@
     "manifest_version": 3,
     "name": "E Commerce",
     "version": "1.0",
+    "permissions": ["storage"],
     "description": "This extension will help you to buy products online",
     "icons": {
         "16": "icon.png",
