@@ -8,7 +8,7 @@ function extractAllProductInfo(retries = 0) {
         if (productElements.length === 0 && retries < 10) { // Set a maximum retry limit
             setTimeout(() => {
                 resolve(extractAllProductInfo(retries + 1)); // Resolve the Promise with retry
-            }, 1000); // Delay of 100 milliseconds
+            }, 2000); // Delay of 100 milliseconds
             return; // Exit to prevent further execution
         }
 
@@ -33,6 +33,13 @@ function extractAllProductInfo(retries = 0) {
                 price: productPrice,
                 imageUrl: productImage
             };
+
+            if (productInfo.imageUrl.includes('transparent-background.png')) {
+                setTimeout(() => {
+                    resolve(extractAllProductInfo(retries + 1)); 
+                }, 2000); // Delay of 100 milliseconds
+                return; // Exit to prevent further execution
+            }
 
             // Push the product info to the allProductInfo array
             allProductInfo.push(productInfo);

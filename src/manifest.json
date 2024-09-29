@@ -14,7 +14,7 @@
     },
     "content_scripts": [
         {
-            "matches": ["*://www.zara.com/*/search/*"],
+            "matches": ["*://www.zara.com/*"],
             "js": ["contentScript.js"]
         }
     ]
