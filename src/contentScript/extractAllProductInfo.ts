@@ -1,5 +1,5 @@
 import extractProductInfo from "./extractProductInfo";
-import retryExtraction from "./retryExtraction";
+
 function extractAllProductInfo(retries = 0) {
     return new Promise((resolve) => {
         const productElements = document.querySelectorAll('.product-grid-product');
@@ -8,7 +8,9 @@ function extractAllProductInfo(retries = 0) {
 
         // Check if no products were found or if we should retry
         if (productElements.length === 0 && retries < 10) {
-            resolve(retryExtraction(retries));
+            setTimeout(() => {
+                extractAllProductInfo(retries + 1);
+            }, 1000);
             return; // Exit to prevent further execution
         }
 

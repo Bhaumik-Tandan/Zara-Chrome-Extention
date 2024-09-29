@@ -5,7 +5,8 @@
   "author": "Bhaumik-Tandan <bhaumik.tandan@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "watch": "webpack --watch --progress --config webpack.config.js"
+    "watch": "webpack --watch --progress --config webpack.config.js",
+    "build": "webpack --progress --config webpack.config.js"
   },
   "dependencies": {
     "react": "^18.3.1",
