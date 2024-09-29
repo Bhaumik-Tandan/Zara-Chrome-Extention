@@ -2,21 +2,23 @@ import React, { useEffect, useState } from 'react';
 
 
 const Products = () => {
-    const [productsInfo, setProductsInfo] = useState([]);
+    const [productsInfo, setProductsInfo] = useState({});
 
     useEffect(() => {
-        chrome.storage.local.get(['productsInfo'], function(result) {
-            console.log('Product Information:', result.productsInfo);
-            setProductsInfo(result.productsInfo|| []);
+        chrome.storage.local.get(['products'], function(result) {
+            console.log('Product Information:', result.products);
+            setProductsInfo(result.products|| {});
         });
     }, []);
+
+    const products=Object.values(productsInfo);
 
     return (
         <div style={styles.container}>
             <h1 style={styles.header}>Product Information</h1>
-            {productsInfo.length > 0 ? (
+            {products.length > 0 ? (
                 <ul style={styles.productList}>
-                    {productsInfo.map((product) => (
+                    {products.map((product) => (
                         <li key={product.name} style={styles.productItem}>
                             <img src={product.imageUrl} alt={product.name} style={styles.productImage} />
                             <div style={styles.productDetails}>

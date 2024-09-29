@@ -8,5 +8,5 @@
         "types": ["chrome"]
     },
     "include": ["src/**/*.ts", "src/**/*.tsx", "src/contentScript/contentScript.ts"],
-    "exclude": ["node_modules"],
+    "exclude": ["node_modules"]
 }
