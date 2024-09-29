@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import shouldRetry from '../contentScript/shouldRetry';
 // Define the structure of a Product
 type Product = {
     name: string;
@@ -26,7 +26,9 @@ const Products = () => {
             <h1 style={styles.header}>Product Information</h1>
             {products.length > 0 ? (
                 <ul style={styles.productList}>
-                    {products.map((product) => (
+                    {products.map((product) => {
+                        if(!shouldRetry(product)) {
+                            return(
                         <li key={product.name} style={styles.productItem}>
                             <img src={product.imageUrl} alt={product.name} style={styles.productImage} />
                             <div style={styles.productDetails}>
@@ -34,7 +36,8 @@ const Products = () => {
                                 <p style={styles.productPrice}>{product.price}</p>
                             </div>
                         </li>
-                    ))}
+                            )
+}})}
                 </ul>
             ) : (
                 <p>No product information available.</p>
