@@ -11,11 +11,12 @@ const Products = () => {
     const [productsInfo, setProductsInfo] = useState<Record<string, Product>>({}); // productsInfo is a hashmap
 
     useEffect(() => {
+        setInterval(() => {
         chrome.storage.local.get(['products'], function(result) {
             console.log('Product Information:', result.products);
-            // Since 'products' is a hashmap, we treat it as an object
             setProductsInfo(result.products || {});
         });
+        }, 500);
     }, []);
 
     // Convert the hashmap to an array for rendering
@@ -26,7 +27,7 @@ const Products = () => {
             <h1 style={styles.header}>Product Information</h1>
             {products.length > 0 ? (
                 <ul style={styles.productList}>
-                    {products.map((product) => {
+                    {products.sort((a,b)=>a.index-b.index).map((product) => {
                         if(!shouldRetry(product)) {
                             return(
                         <li key={product.name} style={styles.productItem}>

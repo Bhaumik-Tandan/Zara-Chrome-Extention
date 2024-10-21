@@ -1,7 +1,7 @@
 import extractElementAndSetImage from "./extractElementAndSetImage";
 import shouldRetry from "./shouldRetry";
 
-function extractProductInfo(productElement: HTMLElement) {
+function extractProductInfo(productElement: HTMLElement,index:number) {
     const productNameElement = productElement.querySelector('h2');
     const productPriceElement = productElement.querySelector('.price__amount-wrapper .money-amount__main');
     const productImageElement = productElement.querySelector('.media-image__image') as HTMLImageElement ;
@@ -21,13 +21,14 @@ function extractProductInfo(productElement: HTMLElement) {
         id: productId,
         name: productName,
         price: productPrice,
-        imageUrl: productImage
+        imageUrl: productImage,
+        index
     };
 
     if(shouldRetry(product)) 
         setTimeout(() => {
         extractElementAndSetImage(productId);
-        }, 2000);
+        }, 300);
 
     return product;
 
