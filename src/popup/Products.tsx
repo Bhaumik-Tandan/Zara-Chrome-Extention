@@ -11,13 +11,28 @@ const Products = () => {
     const [productsInfo, setProductsInfo] = useState<Record<string, Product>>({}); // productsInfo is a hashmap
 
     useEffect(() => {
-        setInterval(() => {
+        // Fetch the initial product data from storage
         chrome.storage.local.get(['products'], function(result) {
-            console.log('Product Information:', result.products);
+            console.log('Initial Product Information:', result.products);
             setProductsInfo(result.products || {});
         });
-        }, 500);
+    
+        // Add an event listener to detect changes in chrome.storage.local
+        function handleStorageChange(changes, areaName) {
+            if (areaName === 'local' && changes.products) {
+                console.log('Updated Product Information:', changes.products.newValue);
+                setProductsInfo(changes.products.newValue || {});
+            }
+        }
+    
+        chrome.storage.onChanged.addListener(handleStorageChange);
+    
+        // Cleanup the event listener when the component unmounts
+        return () => {
+            chrome.storage.onChanged.removeListener(handleStorageChange);
+        };
     }, []);
+    
 
     // Convert the hashmap to an array for rendering
     const products:Product[] = Object.values(productsInfo);
